@@ -1,0 +1,507 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+pre {
+  margin: 0 !important;
+}
+.colorWeak {
+  filter: invert(80%);
+}
+.bf-content {
+  font-size: 14px !important;
+}
+.ant-layout {
+  min-height: 100vh;
+}
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+  left: unset;
+}
+
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.oneline {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+ul,
+ol {
+  list-style: none;
+}
+
+@media (max-width: 768px) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+    &-thead > tr,
+    &-tbody > tr {
+      > th,
+      > td {
+        white-space: pre;
+        > span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+.bgtext {
+  letter-spacing: 0px !important;
+  text-transform: uppercase;
+  background-image: linear-gradient(
+    145deg,
+    #91daff 0%,
+    #7bd1ff 25%,
+    #ffa7ea 50%,
+    #7bd1ff 75%,
+    #91daff 100%
+  );
+  background-clip: text;
+  animation: bgmove 20s linear 0s infinite alternate forwards;
+  -webkit-text-fill-color: transparent;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.centerl {
+  display: flex;
+  align-items: center;
+}
+.spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.columns {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.bglight {
+  background-image: linear-gradient(
+    145deg,
+    #dbf3ff 0%,
+    #c9ecff 25%,
+    #ffdcf7 50%,
+    #c9ecff 75%,
+    #dbf3ff 100%
+  );
+  background-size: 400% 400%;
+  animation: bgmove 20s linear 0s infinite alternate forwards;
+}
+
+@keyframes bgmove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+form {
+  .ant-space {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+.ant-popover-arrow {
+  display: none !important;
+}
+
+.ant-popconfirm-description {
+  font-size: 12px !important;
+}
+.ant-card-head {
+  padding: 0 8px !important;
+  border: none !important;
+}
+
+.hovercard {
+  .icon {
+    transform: scale(0);
+    transition: all 0.4s;
+  }
+  &:hover {
+    transform: scale(1);
+  }
+}
+.ant-card-actions {
+  background-color: rgba(255, 255, 255, 0) !important;
+}
+.ant-typography {
+  margin: 0 !important;
+  margin-right: 12px !important;
+  inset-inline-start: 0 !important;
+  .ant-input {
+    background-color: rgba(161, 161, 161, 0.553);
+    border: none;
+    outline: none;
+    box-shadow: none;
+    &:focus {
+      border: none;
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}
+//editor fixed
+.bf-link-editor .buttons {
+  box-sizing: content-box !important;
+}
+.bf-container {
+  display: flex !important;
+  flex-direction: column !important;
+  .bf-content {
+    flex: 1 !important;
+  }
+}
+.ant-segmented {
+  background-color: transparent !important;
+}
+.ant-segmented-item-selected {
+  div {
+    color: #0062be;
+    font-weight: bolder;
+    transition: all 0.4s;
+  }
+}
+
+.borderani {
+  box-shadow: 0 0 6px #0062be;
+}
+
+@keyframes lager {
+  from {
+    background-color: rgba(20, 119, 246, 0.8);
+    transform: scale(1);
+  }
+  to {
+    background-color: rgba(20, 119, 246, 0);
+    transform: scale(1.4);
+  }
+}
+.borderanis {
+  box-shadow: 0 0 6px #0062be;
+}
+
+.limit {
+  img {
+    max-width: 100% !important;
+  }
+  video {
+    max-width: 100% !important;
+  }
+  blockquote {
+    margin: 0 0 10px;
+    padding: 15px 20px;
+    color: #666;
+    font-style: italic;
+    background-color: #f1f2f3;
+    border-left: 5px solid #ccc;
+  }
+  pre {
+    max-width: 100%;
+    max-height: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    overflow: auto;
+    color: #666;
+    font-weight: 400;
+    font-size: 14px;
+    font-family: monospace;
+    line-height: 16px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: #f1f2f3;
+    border-radius: 3px;
+  }
+  * {
+    word-break: break-all !important;
+  }
+}
+.ant-pro-form-login-header {
+  height: auto !important;
+}
+.ant-pro-form-login-logo {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  img {
+    width: auto !important;
+    height: 100px !important;
+    border-radius: 0 !important;
+  }
+}
+.cards {
+  .ant-card-body {
+    padding: 8px !important;
+    padding-top: 0 !important;
+  }
+}
+.ant-card-extra {
+  display: flex;
+  gap: 6px;
+}
+
+.sorts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.4s;
+
+  &:hover {
+    background-color: #dce6fc;
+  }
+
+  * {
+    transition: all 0.4s;
+  }
+}
+
+.ant-drawer-header {
+  flex: none !important;
+  height: 70px !important;
+  padding: 18px !important;
+}
+.ant-drawer-content {
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+.ant-drawer-body {
+  padding: 0 !important;
+}
+*:focus {
+  outline: none !important;
+}
+.ant-segmented-item-label {
+  overflow: visible !important;
+}
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 6px;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  background-color: #ff4800;
+  border-radius: 20px !important;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 18px 0 12px;
+  b {
+    margin-top: 8px;
+  }
+}
+.hoveremoji {
+  width: 30px;
+  overflow: hidden;
+  transition: all 0.4s;
+  &:hover {
+    width: 298px;
+  }
+  .emoji {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    &:hover {
+      background-color: #ffffff !important;
+    }
+  }
+}
+
+.emojis {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  padding: 1px 6px 1px 4px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  cursor: default;
+  cursor: pointer;
+}
+h4 {
+  margin: 0 !important;
+}
+.ant-list-item {
+  padding: 9px 18px !important;
+  &:hover {
+    background-color: #daebf4;
+  }
+}
+.ant-list-item-meta {
+  align-items: center !important;
+}
+.rightcontent {
+  position: fixed;
+  top: 136px;
+  right: 0;
+  height: calc(100vh - 150px);
+  margin: 0 !important;
+  overflow: hidden;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: all 0.4s;
+  .hovers {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 0px;
+    height: 100%;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.4s;
+    span {
+      opacity: 0;
+      transition: all 0.2s;
+    }
+    &::after {
+      position: absolute;
+      top: 0;
+      right: 12px;
+      width: 0;
+      height: 100%;
+      background-color: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.4s;
+      content: "";
+    }
+  }
+  &:hover {
+    .hovers {
+      width: 50px;
+      > span {
+        opacity: 0.8;
+      }
+      &::after {
+        position: absolute;
+        top: 0;
+        right: 12px;
+        width: 50px;
+        height: 100%;
+        border: 1px solid #f0f0f0;
+        border-radius: 8px;
+        box-shadow: 0 0 12px #dddddd;
+        cursor: pointer;
+        content: "";
+      }
+    }
+  }
+
+  .scrollcontian {
+    height: calc(100vh - 200px);
+    overflow: hidden;
+    > div {
+      > div:last-child {
+        opacity: 0 !important;
+      }
+    }
+  }
+}
+.ant-list-item-action {
+  margin-inline-start: 12px !important;
+}
+.ant-drawer-extra {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.diycard {
+  margin-bottom: 6px;
+  padding: 4px 6px;
+  background-color: rgba(215, 240, 250, 0.499);
+  border-radius: 4px;
+  cursor: pointer !important;
+  > * {
+    font-size: 13px !important;
+  }
+}
+
+.react-resizable {
+  position: relative;
+}
+
+.table-cell {
+  display: -webkit-box;
+  //width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.react-resizable-handle {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  z-index: 999;
+  width: 10px;
+  height: 100%;
+  background: transparent;
+  cursor: col-resize;
+}
+.ant-pro-table-list-toolbar-right {
+  flex: 1 !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.ant-pro-table-list-toolbar-left {
+  flex: 0;
+}
+
+
+
+
+.MuiDrawer-paper {
+  z-index: 992 !important;
+}
+.MuiAppBar-root {
+  z-index: 990 !important;
+}
+.MuiDialog-root {
+  z-index: 999 !important;
+}
