@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { history } from "@umijs/max";
 import { errorConfig } from "./requestErrorConfig";
-import { getFetch } from "./utils/doFetch";
+import { doFetch } from "./utils/doFetch";
 const loginPath = "/user/login";
 
 /**
@@ -10,12 +10,12 @@ const loginPath = "/user/login";
 export async function getInitialState() {
   const fetchUserInfo = async () => {
     try {
-      const msg = await getFetch({
-        url: "/webtool/user",
+      const msg = await doFetch({
+        url: "/system/me",
       });
-      return msg.data;
+      return msg.data.data;
     } catch (error) {
-      // history.push(loginPath);
+      history.push(loginPath);
     }
     return undefined;
   };
@@ -30,14 +30,36 @@ export async function getInitialState() {
       activeUserIdList: [],
       vs: false,
       nav: 280,
-      message: {},
+      message: {
+        open: false,
+        snackbar: {
+          autoHideDuration: 2000,
+          anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "right",
+          },
+        },
+        type: "success",
+        content: "",
+      },
     };
   }
   return {
     fetchUserInfo,
     activeUserIdList: [],
     vs: false,
-    message: {},
+    message: {
+      open: false,
+      snackbar: {
+        autoHideDuration: 2000,
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "right",
+        },
+      },
+      type: "success",
+      content: "",
+    },
     nav: 280,
   };
 }

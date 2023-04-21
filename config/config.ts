@@ -104,7 +104,6 @@ export default defineConfig({
   access: {},
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
-  headScripts: [`./preload.js`],
   mfsu: {},
   requestRecord: {},
   define: env[REACT_APP_ENV as keyof typeof env],

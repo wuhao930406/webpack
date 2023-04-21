@@ -66,6 +66,7 @@ function App() {
           severity={message?.type}
           onClose={handleClose}
           {...message.alert}
+          sx={{color:"#f9f9f9"}}
         >
           {message?.title ? <AlertTitle>{message?.title}</AlertTitle> : null}
           {message?.content}

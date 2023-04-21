@@ -1,6 +1,12 @@
-import React, { useState } from "react";
-import { Button, TextField, Link, Grid, Box, Typography } from "@mui/material";
 import { doFetch } from "@/utils/doFetch";
+import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
+import { history, useModel } from "@umijs/max";
+import AES from "crypto-js/aes";
+import Utf8 from "crypto-js/enc-utf8";
+import ECB from "crypto-js/mode-ecb";
+import Pkcs7 from "crypto-js/pad-pkcs7";
+import dayjs from "dayjs";
+import { useState } from "react";
 import "./index.less";
 
 function Login() {
@@ -8,10 +14,18 @@ function Login() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const { initialState, setInitialState } = useModel("@@initialState");
+  const fetchUserInfo = async () => {
+    const userInfo = await initialState?.fetchUserInfo();
+    if (userInfo) {
+      await setInitialState((s) => {
+        return { ...s, currentUser: userInfo };
+      });
+    }
+  };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    doFetch({url:"/user/login",params:{}})
     // 非空校验
     if (!username) {
       setEmailError(true);
@@ -19,6 +33,28 @@ function Login() {
 
     if (!password) {
       setPasswordError(true);
+    }
+
+    let timestamp = dayjs().valueOf().toString() + "acb";
+    let newtimestamp = AES.encrypt(timestamp, Utf8.parse("NANGAODEAESKEY--"), {
+      mode: ECB,
+      padding: Pkcs7,
+    }).toString();
+    let passwordsrc = AES.encrypt(password, Utf8.parse(timestamp), {
+      mode: ECB,
+      padding: Pkcs7,
+    }).toString();
+    const postdata = {
+      userAccount: username,
+      password: passwordsrc,
+      encryptKey: newtimestamp,
+    };
+    let res = await doFetch({ url: "/system/login", params: { ...postdata } });
+    let token = res?.data?.data?.token ?? null;
+    if (token) {
+      localStorage.setItem("TOKENES", token);
+      await fetchUserInfo();
+      history.replace("/work");
     }
 
     // 提交表单逻辑
@@ -72,9 +108,9 @@ function Login() {
       </Button>
       <Grid container>
         <Grid item xs>
-          <Link href="#/" variant="body2">
+          {/* <Link href="#/" variant="body2">
             忘记密码？
-          </Link>
+          </Link> */}
         </Grid>
         <Grid item>
           <Link href="#/user/signup" variant="body2">

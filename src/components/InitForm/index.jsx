@@ -85,8 +85,8 @@ let FormRender = memo(({ fields = [], colProps, proformRef }) => {
 
 function InitForm({
   formRef,
-  onFinish = (vals) => {
-    console.log(vals);
+  onFinish = (vals,extra) => {
+    console.log(vals,extra);
   },
   formKey,
   params = {},

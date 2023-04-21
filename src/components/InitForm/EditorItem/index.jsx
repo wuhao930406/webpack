@@ -4,7 +4,6 @@ import BraftEditor from 'braft-editor';
 import React, { useState, useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-const prefix = "/api";
 
 export default function EditorItem({
   value,
@@ -54,7 +53,7 @@ export default function EditorItem({
       'POST',
       serverURL
         ? serverURL
-        : prefix + '/file/upload',
+        : REACT_APP_URL + '/file/upload',
       true,
     );
     xhr.send(fd);

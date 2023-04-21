@@ -1,4 +1,3 @@
-import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -6,14 +5,18 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
-import * as React from "react";
+import Slide from "@mui/material/Slide";
 import Draggable from "react-draggable";
-import Slide from '@mui/material/Slide';
+import {
+  SendOutlined
+} from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { log } from "console";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
 
 function PaperComponent(props) {
   return (
@@ -26,48 +29,29 @@ function PaperComponent(props) {
   );
 }
 
-export default function DraggableDialog({ children, config={} }) {
-  const [open, setOpen] = React.useState(false);
-  const [formdom, setformdom] = React.useState(null);
+export default function DraggableDialog({ children, dialogprops, handleClose, loading, formdom }) {
   const formRef = React.useRef();
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <div>
-      {Object.keys(config)?.map((it, i) => (
-        <Button
-          key={it}
-          variant="contained"
-          {...it.btn}
-          onClick={() => {
-            setOpen(true)
-            setformdom(config[it]);
-          }}
-        >
-          {config[it]?.title}
-        </Button>
-      ))}
-
       <Dialog
-        open={open}
         onClose={handleClose}
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
         TransitionComponent={Transition}
         maxWidth="xs"
         fullWidth
-        sx={{marginTop:"-20vh"}}
+        sx={{ marginTop: "-20vh" }}
+        {...dialogprops}
         //keepMounted
       >
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
-          {formdom?.title}
+          {dialogprops?.title}
         </DialogTitle>
         <DialogContent>
-          {children && React.cloneElement(children, { submitter: false, formRef })}
-          {formdom && React.cloneElement(formdom?.component, { submitter: false, formRef }) }
+          {children &&
+            React.cloneElement(children, { submitter: false, formRef })}
+            {formdom && React.cloneElement(formdom, { submitter: false, formRef })}
         </DialogContent>
         <DialogActions>
           <Button
@@ -83,11 +67,12 @@ export default function DraggableDialog({ children, config={} }) {
             type="submit"
             key="submit"
             variant="contained"
-            loading
+            loading={loading}
             loadingPosition="start"
-            startIcon={<SaveIcon />}
-            onClick={() => () => {
-              formRef?.current?.submit();
+            startIcon={<SendOutlined />}
+            onClick={() => {
+              console.log(formRef?.current?.submit())
+            
             }}
           >
             提交

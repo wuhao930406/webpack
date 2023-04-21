@@ -68,11 +68,11 @@ request.interceptors.request.use(async (url, options) => {
     const headers =
       options.type == 'form'
         ? {
-            Authorization: token,
+          token: token,
           }
         : {
             'Content-Type': 'application/json',
-            Authorization: token,
+            token: token,
           };
     return {
       url: url,
@@ -101,7 +101,7 @@ request.interceptors.response.use(async (response, options) => {
   if (data?.code !== "0000") {
     if (data?.error || data?.code === -1) {
       console.log(location.origin);
-      localStorage.removeItem('TOKENES');
+      // localStorage.removeItem('TOKENES');
       //history.replace('/user/login');
     } else {
       message.destroy();

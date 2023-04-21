@@ -51,6 +51,11 @@ export default [
             component: "./homepage",
           },
           {
+            name: "个人中心",
+            path: "/work/usercenter",
+            component: "./usercenter",
+          },
+          {
             name: "个人主页",
             path: "/work/organization",
             component: "./organization",

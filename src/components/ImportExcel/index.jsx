@@ -1,37 +1,64 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
+import { useState } from "react";
 import DraggableDialog from "../DraggableDialog";
-import InitForm from "../InitForm";
+import InitForm from "../InitForm"
 
 function ImportExcel() {
-  const config = {
-    import: {
-      title: "导入",
-      component: (
-        <InitForm
-          style={{ marginTop: 12 }}
-          fields={[
-            {
-              title: "",
-              dataIndex: "file",
-              key: "file",
-              valueType: "uploadDragger",
-              colProps: {
-                span: 24,
-              },
-            },
-          ]}
-        ></InitForm>
-      ),
-      btn: {
-        variant: "outlined",
-      },
-    },
-  };
+  const [dialogprops, setdialogprops] = useState();
+
   return (
     <>
       <Stack direction={"row"} gap={1}>
-        <DraggableDialog config={config}></DraggableDialog>
-        <Button variant="text">下载模板文件</Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setdialogprops({
+              open: true,
+              title: "导入",
+            });
+          }}
+        >
+          导入
+        </Button>
+        <DraggableDialog
+          dialogprops={dialogprops}
+          handleClose={()=>{
+            setdialogprops(s=>({
+              ...s,
+              open:false
+            }))
+          }}
+          formdom={
+            <InitForm
+              style={{ marginTop: 12, marginBottom: -18 }}
+              fields={[
+                {
+                  title: "",
+                  dataIndex: "file",
+                  key: "file",
+                  valueType: "uploadDragger",
+                  colProps: {
+                    span: 24,
+                  },
+                },
+              ]}
+            ></InitForm>
+          }
+        >
+          <Stack direction={"column"}>
+            <Stack
+              direction={"row"}
+              gap={1}
+              alignItems={"center"}
+              justifyContent={"space-between"}
+            >
+              <Typography variant={"b"} color={"#999999"}>
+                *请先下载模板文件
+              </Typography>
+              <Button variant="text">模板文件</Button>
+            </Stack>
+          </Stack>
+        </DraggableDialog>
       </Stack>
     </>
   );

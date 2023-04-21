@@ -36,7 +36,6 @@ import {
 } from "@ant-design/icons";
 import EditTable from "./EditTable";
 import EditorItem from "./EditorItem";
-const prefix = "/api";
 
 const { Image, Form, Upload, Col, Dropdown, Menu, Tabs } = Antd;
 
@@ -1052,7 +1051,7 @@ function UploadBtn({ item, colProps }) {
       <ProFormUploadButton
         fieldProps={{
           ...item?.fieldProps,
-          action: prefix + "/file/upload",
+          action: REACT_APP_URL + "/file/upload",
           onPreview: (file) => {
             let url = "";
             if (file.response) {
@@ -1107,7 +1106,7 @@ function UploadImg({ value, onChange, fieldProps }) {
   // maxCount 最大数量
   const defaultconfig = {
     name: "file",
-    action: prefix + "/file/upload",
+    action: REACT_APP_URL + "/file/upload",
     accept: ".jpg,.png,.jpeg",
     listType: "picture-card",
     beforeUpload: beforeUpload,
@@ -1224,7 +1223,7 @@ function UploadDragger({ item, colProps }) {
       <ProFormUploadDragger
         fieldProps={{
           ...item?.fieldProps,
-          action: prefix + "/file/upload",
+          action: REACT_APP_URL + "/file/upload",
           onPreview: (file) => {
             let url = "";
             if (file.response) {

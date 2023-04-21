@@ -483,6 +483,17 @@ h4 {
   background: transparent;
   cursor: col-resize;
 }
+
+.ant-pro-card {
+  border-radius: 12px !important;
+}
+
+.ant-pro-card-body {
+  padding-inline: 0 !important;
+}
+.ant-pro-table-list-toolbar-container {
+  padding-inline: 8px;
+}
 .ant-pro-table-list-toolbar-right {
   flex: 1 !important;
   flex-direction: row !important;
@@ -492,7 +503,31 @@ h4 {
 .ant-pro-table-list-toolbar-left {
   flex: 0;
 }
-
+.ant-table-pagination.ant-pagination {
+  padding-inline: 8px;
+}
+//清除圆角
+.ant-table-wrapper
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  > *:last-child,
+.ant-table-wrapper
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  > *:first-child {
+  border-radius: 0 !important;
+}
+//清楚arrow
+.ant-popover-arrow {
+  display: none !important;
+}
+.ant-upload{
+  overflow: hidden !important;
+}
 
 
 

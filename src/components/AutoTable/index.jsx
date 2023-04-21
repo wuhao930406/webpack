@@ -35,7 +35,7 @@ const Mtable = (props) => {
     pageSize, //修改默认pageSize
     pagination, //分页设置
     x, //横向滚动
-    resizeable = true,
+    resizeable = false,
   } = props;
 
   const actionRefs = actionRef ?? useRef(),
@@ -107,10 +107,16 @@ const Mtable = (props) => {
                 fieldProps: {
                   ...it?.fieldProps,
                   options: [...it.options],
+                  dropdownMatchSelectWidth: 200,
                 },
               };
             } else if (it.options) {
               options = {
+                fieldProps: {
+                  ...it?.fieldProps,
+                  dropdownMatchSelectWidth: 200,
+                  showSearch: true,
+                },
                 params: newparames,
                 request: async (params) => {
                   if (Object.keys(it?.options).includes("linkParams")) {
@@ -210,7 +216,7 @@ const Mtable = (props) => {
     }
     changeColumns(allcol);
     actionRefs?.current?.reload();
-  }, [columns, extraparams, path]);
+  }, [extraparams]);
 
   //缩放表格
   const handleResize =
@@ -298,17 +304,14 @@ const Mtable = (props) => {
       rowKey={rowKey ?? "id"} //表格每行数据的key
       dateFormatter="string"
       request={request}
-      pagination={
-        ifspagination
-          ? false
-          : {
-              showTotal: (total, range) => <span>共{total}条</span>,
-              showQuickJumper: true,
-              showSizeChanger: true,
-              pageSizeOptions: [5, 10, 15, 30, 50, 100, 200],
-              defaultPageSize: pageSize || 15,
-            }
-      }
+      pagination={{
+        size: !ifspagination ? "default" : "small",
+        showTotal: (total, range) => <span>共{total}条</span>,
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizeOptions: [5, 10, 15, 30, 50, 100, 200],
+        defaultPageSize: pageSize || 15,
+      }}
       search={{
         filterType: "light", //轻量模式
         placement: "bottomLeft",

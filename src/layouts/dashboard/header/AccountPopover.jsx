@@ -94,7 +94,7 @@ export default function AccountPopover() {
 
         <MenuItem
           onClick={() => {
-            handleClose("/login");
+            handleClose("/user/login");
           }}
           sx={{ m: 1 }}
         >

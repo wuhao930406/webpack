@@ -1,26 +1,18 @@
+import { useLocation, useModel ,history} from "@umijs/max";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import { useLocation,useModel } from "@umijs/max";
 
 // @mui
-import {
-  Box,
-  Drawer,
-  Typography,
-  Stack,
-  Button,
-} from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import { Avatar, Box, Button, Drawer, Stack, Typography } from "@mui/material";
 // mock
-import account from "@/_mock/account";
 // hooks
 import useResponsive from "@/hooks/useResponsive";
 // components
 import Logo from "@/components/logo";
-import { Scrollbars } from "react-custom-scrollbars";
 import NavSection from "@/components/nav-section";
+import { Scrollbars } from "react-custom-scrollbars";
 import navConfig from "./config";
-
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
@@ -32,20 +24,18 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const isDesktop = useResponsive("up", "lg");
 
-
   const {
-    initialState: { nav },
+    initialState: { nav, currentUser },
     setInitialState,
   } = useModel("@@initialState");
 
-
   const setnav = (fn) => {
     const res = fn(nav);
-    setInitialState(s=>({
+    setInitialState((s) => ({
       ...s,
-      nav:res
-    }))
-  }
+      nav: res,
+    }));
+  };
 
   useEffect(() => {
     if (openNav) {
@@ -86,31 +76,36 @@ export default function Nav({ openNav, onCloseNav }) {
         )}
       </Box>
 
-      <Box sx={{ px: 1, pb: 3, mt: 7 }}>
+      <Box sx={{ px: 1, pb: 1.5, mt: 7 }}>
         <Stack
           alignItems="center"
           spacing={3}
           sx={{ pt: ifs ? 0 : 5, borderRadius: 2, position: "relative" }}
         >
-          <Box
-            component="img"
-            src={account.photoURL}
+          <Avatar
+            src={currentUser?.picUrl ?? DEFAULT_HEAD_IMG}
             sx={{
-              width: "70%",
+              width: ifs ? "2.5vw" : "12vw",
+              height: ifs ? "2.5vw" : "12vw",
               maxWidth: 100,
+              maxHeight: 100,
               position: "absolute",
-              top: -50,
-              borderRadius: 60,
+              top: -46,
+              borderRadius: 600,
               cursor: "pointer",
+              boxShadow: "0 0 6px #999",
+            }}
+            onClick={()=>{
+              history.push("/work/usercenter")
             }}
           />
           {!ifs && (
             <Box sx={{ textAlign: "center" }}>
-              <Typography gutterBottom variant="h6">
-                {account.displayName}
+              <Typography gutterBottom variant="h6" mt={1.2}>
+                {currentUser?.name}
               </Typography>
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {account.role}
+                角色:{currentUser?.typeName}
               </Typography>
             </Box>
           )}
@@ -152,7 +147,6 @@ export default function Nav({ openNav, onCloseNav }) {
           <ChevronLeftIcon
             style={{
               transform: ifs ? "rotate(180deg)" : "rotate(0deg)",
-              
             }}
           />
           <span>{ifs ? "" : "收起"}</span>
@@ -167,7 +161,6 @@ export default function Nav({ openNav, onCloseNav }) {
       sx={{
         flexShrink: { lg: 0 },
         width: { lg: nav },
-        
       }}
     >
       {isDesktop ? (
@@ -177,7 +170,7 @@ export default function Nav({ openNav, onCloseNav }) {
           PaperProps={{
             sx: {
               width: nav,
-              
+
               bgcolor: "background.default",
             },
           }}
