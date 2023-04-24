@@ -1089,7 +1089,7 @@ function UploadBtn({ item, colProps }) {
 
 function UploadImg({ value, onChange, fieldProps }) {
   const [image, setImage] = useState({});
-  let token = "18e1081d54f57af2fdeac1964cc981e7";
+  let token = localStorage.getItem("TOKENES");
 
   function beforeUpload(file) {
     const isJpgOrPng =

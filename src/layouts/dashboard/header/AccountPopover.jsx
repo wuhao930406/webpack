@@ -1,40 +1,114 @@
-import { useState } from "react";
-// @mui
+import DraggableDialog from "@/components/DraggableDialog";
+import InitForm from "@/components/InitForm";
+import { doFetch } from "@/utils/doFetch";
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Box,
   Divider,
-  Typography,
-  Stack,
-  MenuItem,
   IconButton,
+  MenuItem,
   Popover,
+  Stack,
+  Typography,
 } from "@mui/material";
-import { useNavigate } from "@umijs/max";
-import SettingsIcon from "@mui/icons-material/Settings";
-// mocks_
-import account from "@/_mock/account";
+import { useModel, useNavigate } from "@umijs/max";
+import { useRequest } from "ahooks";
+import AES from "crypto-js/aes";
+import Utf8 from "crypto-js/enc-utf8";
+import ECB from "crypto-js/mode-ecb";
+import Pkcs7 from "crypto-js/pad-pkcs7";
+import dayjs from "dayjs";
+import { useState } from "react";
+import { message } from 'antd';
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
-    label: "Home",
-    icon: "eva:home-fill",
+    label: "修改密码",
+    type: "pwd",
   },
   {
-    label: "Profile",
-    icon: "eva:person-fill",
-  },
-  {
-    label: "Settings",
-    icon: "eva:settings-2-fill",
+    label: "个人信息",
+    type: "info",
   },
 ];
 
-// ----------------------------------------------------------------------
+const columnes = [
+  {
+    title: "旧密码",
+    dataIndex: "password",
+    key: "password",
+    valueType: "password",
+    colProps: {
+      span: 24,
+    },
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: "此项为必填项",
+        },
+      ],
+    },
+  },
+  {
+    title: "新密码",
+    dataIndex: "newPassword",
+    key: "newPassword",
+    valueType: "password",
+    colProps: {
+      span: 24,
+    },
+    formItemProps: {
+      rules: [
+        {
+          required: true,
+          message: "此项为必填项",
+        },
+      ],
+    },
+  },
+  {
+    title: "确认新密码",
+    dataIndex: "confirmNewPassword",
+    key: "confirmNewPassword",
+    valueType: "password",
+    colProps: {
+      span: 24,
+    },
+    formItemProps: {
+      dependencies: ["newPassword"],
+      rules: [
+        {
+          required: true,
+          message: "此项为必填项",
+        },
+        ({ getFieldValue }) => ({
+          validator(_, value) {
+            if (!value || getFieldValue("newPassword") === value) {
+              return Promise.resolve();
+            }
+            return Promise.reject(new Error("两次密码不一致!"));
+          },
+        }),
+      ],
+    },
+  },
+];
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+
+  const [dialogprops, setdialogprops] = useState({
+    open: false,
+  });
+
+  const {
+    initialState: { currentUser },
+    setInitialState,
+  } = useModel("@@initialState");
+
   const navigate = useNavigate();
 
   const handleOpen = (event) => {
@@ -43,12 +117,80 @@ export default function AccountPopover() {
 
   const handleClose = (path) => {
     setOpen(null);
+    if (path === "/user/login") {
+      doFetch({ url: "/system/logout", params: {} }).then((res) => {
+        console.log(res);
+        if (res?.code === "0000") {
+          path && navigate(path);
+        }
+      });
+      return;
+    }
     path && navigate(path);
   };
+  const handleClosed = () => {
+    setdialogprops({
+      open: false,
+    });
+  };
+
+  const { runAsync, loading } = useRequest(doFetch, {
+    manual: true,
+    onSuccess: (res, parames) => {
+      if (res?.code == "0000") {
+        handleClosed();
+        handleClose("/user/login");
+        message.success("操作成功");
+      }
+    },
+  });
 
   return (
     <>
-      <IconButton onClick={handleOpen}> 
+      <DraggableDialog
+        handleClose={handleClosed}
+        loading={loading}
+        dialogprops={dialogprops}
+      >
+        <InitForm
+          fields={columnes}
+          onFinish={(val, extra) => {
+            const { password, newPassword } = val;
+            let timestamp = dayjs().valueOf().toString() + "acb";
+            let newtimestamp = AES.encrypt(
+              timestamp,
+              Utf8.parse("NANGAODEAESKEY--"),
+              {
+                mode: ECB,
+                padding: Pkcs7,
+              }
+            ).toString();
+            let passwordsrc = AES.encrypt(password, Utf8.parse(timestamp), {
+              mode: ECB,
+              padding: Pkcs7,
+            }).toString();
+            let newPasswordsrc = AES.encrypt(
+              newPassword,
+              Utf8.parse(timestamp),
+              {
+                mode: ECB,
+                padding: Pkcs7,
+              }
+            ).toString();
+
+            let postdata = {
+              encryptKey: newtimestamp,
+              password: passwordsrc,
+              newPassword: newPasswordsrc,
+            };
+            runAsync({
+              url: "/system/updatePassword",
+              params: postdata,
+            });
+          }}
+        ></InitForm>
+      </DraggableDialog>
+      <IconButton onClick={handleOpen}>
         <SettingsIcon></SettingsIcon>
       </IconButton>
 
@@ -73,10 +215,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {currentUser?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            {account.email}
+            {currentUser?.email}
           </Typography>
         </Box>
 
@@ -84,7 +226,21 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
+            <MenuItem
+              key={option.label}
+              onClick={() => {
+                if (option.type === "pwd") {
+                  setOpen(null);
+                  setdialogprops((s) => ({
+                    ...s,
+                    open: true,
+                    title: "修改密码",
+                  }));
+                } else {
+                  handleClose("/work/usercenter");
+                }
+              }}
+            >
               {option.label}
             </MenuItem>
           ))}
@@ -98,7 +254,7 @@ export default function AccountPopover() {
           }}
           sx={{ m: 1 }}
         >
-          Logout
+          退出登录
         </MenuItem>
       </Popover>
     </>

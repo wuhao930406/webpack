@@ -21,7 +21,7 @@ export async function getInitialState() {
   };
   // 如果不是登录页面，执行
   const { location } = history;
-  if (location.pathname !== loginPath) {
+  if (!location.pathname.includes("user")) {
     const currentUser = await fetchUserInfo();
     localStorage.setItem("ID", currentUser?.id);
     return {

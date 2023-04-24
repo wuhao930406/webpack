@@ -11,7 +11,6 @@ import {
   SendOutlined
 } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-import { log } from "console";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -29,7 +28,7 @@ function PaperComponent(props) {
   );
 }
 
-export default function DraggableDialog({ children, dialogprops, handleClose, loading, formdom }) {
+export default function DraggableDialog({ children, dialogprops, handleClose, loading, formdom, maxWidth }) {
   const formRef = React.useRef();
 
   return (
@@ -39,9 +38,8 @@ export default function DraggableDialog({ children, dialogprops, handleClose, lo
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
         TransitionComponent={Transition}
-        maxWidth="xs"
+        maxWidth={maxWidth??"xs"}
         fullWidth
-        sx={{ marginTop: "-20vh" }}
         {...dialogprops}
         //keepMounted
       >

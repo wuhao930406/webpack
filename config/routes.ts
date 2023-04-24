@@ -24,6 +24,10 @@ export default [
         component: "@/layouts/login/index",
         routes: [
           {
+            path: "/user",
+            redirect: "/user/login",
+          },
+          {
             name: "登录",
             path: "/user/login",
             component: "./user/login",
@@ -56,14 +60,14 @@ export default [
             component: "./usercenter",
           },
           {
-            name: "个人主页",
+            name: "组织管理",
             path: "/work/organization",
             component: "./organization",
           },
           {
-            name: "小组公告",
-            path: "/work/project/:id",
-            component: "./project",
+            name: "教师管理",
+            path: "/work/teacher",
+            component: "./teacher",
           },
         ],
       },

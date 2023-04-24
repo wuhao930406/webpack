@@ -89,7 +89,7 @@ const navConfig = [
       },
       {
         title: "教师管理",
-        path: "/work/blog",
+        path: "/work/teacher",
         icon: icon("ic_user"),
       },
       {

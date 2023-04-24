@@ -5,8 +5,8 @@ import InitForm from "@/components/InitForm";
 import PremButton from "@/components/PremButton";
 import { doFetch } from "@/utils/doFetch";
 import { Box, Container, Stack, Typography } from "@mui/material";
-import { useModel } from "@umijs/max";
 import { useRequest } from "ahooks";
+import { message } from "antd";
 import { useRef, useState } from "react";
 import "./index.less";
 
@@ -90,12 +90,6 @@ function Organization() {
     });
   };
 
-  const {
-    initialState: { message },
-    setInitialState,
-  } = useModel("@@initialState");
-  const formRef = useRef();
-
   const { runAsync, loading } = useRequest(doFetch, {
     manual: true,
     onSuccess: (res, parames) => {
@@ -104,15 +98,7 @@ function Organization() {
       let url = paramsall?.url;
       if (res?.code == "0000") {
         handleClose();
-        setInitialState((s) => ({
-          ...s,
-          message: {
-            ...s.message,
-            open: true,
-            content: "操作成功！",
-            type: "success",
-          },
-        }));
+        message.success("操作成功");
         if (url.indexOf("delete") !== -1) {
           return;
         }
@@ -327,7 +313,7 @@ function Organization() {
           ]}
           path="/organization/page"
           expandable={{
-            columnWidth: "20px",
+            columnWidth: "60px",
             expandedRowKeys,
             onExpandedRowsChange,
             expandedRowRender: (record) => (
@@ -348,7 +334,6 @@ function Organization() {
                     },
                   ]}
                   extraparams={{ parentId: record?.id }}
-
                 ></AutoTable>
               </div>
             ),

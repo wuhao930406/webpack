@@ -23,7 +23,7 @@ let handlEmptyChild = (tree = []) => {
   return newtree;
 };
 
-const Mtable = (props) => {
+const AutoTable = (props) => {
   const {
     actionRef, //表格动作
     formRef, //表单Ref
@@ -36,6 +36,7 @@ const Mtable = (props) => {
     pagination, //分页设置
     x, //横向滚动
     resizeable = false,
+    rerendered = true,
   } = props;
 
   const actionRefs = actionRef ?? useRef(),
@@ -46,7 +47,6 @@ const Mtable = (props) => {
   const [columnes, setcolumnes] = useState(
     columns?.filter?.((it) => it.valueType != "split") ?? []
   );
-  const [newparames, setnewparams] = useState({});
 
   //调用接口
   const request = async (params, sort, filter) => {
@@ -79,7 +79,7 @@ const Mtable = (props) => {
     };
   };
 
-  function changeColumns(allcol = {}) {
+  function changeColumns(params) {
     setcolumnes((s) => {
       return s
         .filter((it) => it.valueType != "split")
@@ -89,13 +89,6 @@ const Mtable = (props) => {
           if (it.valueType == "option") {
             curkey = "option";
           }
-          let itemwidth = allcol[curkey]?.width
-            ? allcol[curkey].width
-            : it.width
-            ? it.width
-            : resizeable
-            ? 160
-            : "auto";
           let options = {};
           if (
             ["select", "treeSelect", "radio", "checkbox", "cascader"].includes(
@@ -117,12 +110,12 @@ const Mtable = (props) => {
                   dropdownMatchSelectWidth: 200,
                   showSearch: true,
                 },
-                params: newparames,
-                request: async (params) => {
+                params: params,
+                request: async (parames) => {
                   if (Object.keys(it?.options).includes("linkParams")) {
                     let list = await doFetch({
                       url: it?.options?.path,
-                      params: newparames,
+                      params: { ...params, isAll: 1 },
                     });
                     const res = list.data.dataList;
                     return it.valueType == "treeSelect"
@@ -166,7 +159,6 @@ const Mtable = (props) => {
           }
           options = {
             ...options,
-            width: itemwidth,
           };
 
           delete it.formItemProps;
@@ -174,7 +166,7 @@ const Mtable = (props) => {
             ...it,
             ...options,
             onHeaderCell: (column) => ({
-              width: column.width ?? itemwidth,
+              width: column.width,
               onResize: handleResize(index),
               onResizeStop: handleResizeStop(index),
             }),
@@ -183,40 +175,11 @@ const Mtable = (props) => {
     });
   }
 
-  //初始化操作数据
-  const initDrage = async () => {
-    if (!path) return;
-    //allcol 默认状态设置 valueColumns 为columns全列设置
-    let allcol = {};
-    columns
-      .filter((it) => it.valueType != "split")
-      .map((it, i) => {
-        if (it.valueType == "option") {
-          allcol.option = {
-            order: columns.length - 1,
-            show: true,
-            fixed: "right",
-          };
-        } else {
-          allcol[it.key ?? it.dataIndex] = {
-            order: i,
-            show: true,
-          };
-        }
-      });
-    setvalueColumns(allcol);
-    return allcol;
-  };
-
   //调用重新渲染表格
   useAsyncEffect(async () => {
-    let allcol = {};
-    if (resizeable) {
-      allcol = await initDrage();
-    }
-    changeColumns(allcol);
-    actionRefs?.current?.reload();
-  }, [extraparams]);
+    changeColumns({});
+    rerendered && actionRefs?.current?.reload();
+  }, [path, columns, extraparams]);
 
   //缩放表格
   const handleResize =
@@ -241,7 +204,6 @@ const Mtable = (props) => {
       setvalueColumns((s) => {
         let submitdata = { ...s } ?? {},
           curkey = columnes[index]?.key ?? columnes[index]?.dataIndex;
-        console.log(curkey, size.width);
         if (!curkey) return;
         submitdata[curkey] = submitdata[curkey] ?? {};
         submitdata[curkey].width = parseInt(size.width);
@@ -271,27 +233,45 @@ const Mtable = (props) => {
         },
       }
     : {};
+
   return (
     <ProTable
       {...props}
       {...components}
       size={size}
-      onSubmit={(params) => {
-        let newparams = {};
-        columns.map((it, i) => {
-          if (
-            it?.options?.linkParams &&
-            Object.keys(it?.options?.linkParams).includes(
-              Object.keys(params)[0]
-            )
-          ) {
-            for (let dataindex in it?.options?.linkParams) {
-              newparams[dataindex] =
-                formRefs?.current?.getFieldValue?.(dataindex);
+      form={{
+        onValuesChange: (changedValues, values) => {
+          let curchangekey = Object.keys(changedValues)[0];
+          let newparams = {},
+            resetkeys = [];
+          columns.map((it, i) => {
+            const { linkParams } = it?.options??{};
+            if (linkParams && Object.keys(linkParams).includes(curchangekey)) {
+              for (let dataindex in linkParams) {
+                let linkkey = "";
+                if (!linkParams[dataindex]) {
+                  linkkey = dataindex;
+                } else {
+                  linkkey = linkParams[dataindex];
+                }
+
+                newparams[linkkey] =
+                  formRefs?.current?.getFieldValue?.(dataindex);
+                resetkeys.push(it?.key);
+              }
             }
+          });
+          const resetkey = resetkeys?.filter((it) => it !== curchangekey)?.[0];
+          if (resetkey) {
+            formRefs?.current?.setFieldsValue({ [resetkey]: "" });
           }
-        });
-        setnewparams(newparams);
+          if (Object?.keys?.(newparams)?.length > 0) {
+            changeColumns(newparams);
+          }
+        },
+      }}
+      onSubmit={(params) => {
+        // formRef?.current?
       }}
       onSizeChange={(size) => {
         localStorage.setItem("size", size); //设置全局表格规格缓存
@@ -320,4 +300,4 @@ const Mtable = (props) => {
   );
 };
 
-export default memo(Mtable);
+export default memo(AutoTable);
