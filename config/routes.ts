@@ -69,6 +69,25 @@ export default [
             path: "/work/teacher",
             component: "./teacher",
           },
+          {
+            name: "学生管理",
+            path: "/work/student",
+            component: "./student",
+          },
+          {
+            name: "班级管理",
+            path: "/work/class",
+            component: "./class",
+          },
+          {
+            name: "模型管理",
+            path: "/work/model",
+            component: "./model",
+          }, {
+            name: "平台日志",
+            path: "/work/logs" ,
+            component: "./logs",
+          },
         ],
       },
       {

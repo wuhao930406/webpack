@@ -4,7 +4,7 @@ import { doFetch } from "@/utils/doFetch";
 import { ProTable } from "@ant-design/pro-components";
 import { Tooltip } from "@mui/material";
 import { useAsyncEffect } from "ahooks";
-import { memo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Resizecell from "./Resizecell";
 
 let handlEmptyChild = (tree = []) => {
@@ -48,6 +48,8 @@ const AutoTable = (props) => {
     columns?.filter?.((it) => it.valueType != "split") ?? []
   );
 
+  const [paramconfig, setparamconfig] = useState({});
+
   //调用接口
   const request = async (params, sort, filter) => {
     if (!path) return;
@@ -79,7 +81,7 @@ const AutoTable = (props) => {
     };
   };
 
-  function changeColumns(params) {
+  useEffect(() => {
     setcolumnes((s) => {
       return s
         .filter((it) => it.valueType != "split")
@@ -110,12 +112,13 @@ const AutoTable = (props) => {
                   dropdownMatchSelectWidth: 200,
                   showSearch: true,
                 },
-                params: params,
+                params: paramconfig[curkey],
                 request: async (parames) => {
+                  delete parames?.keyWords;
                   if (Object.keys(it?.options).includes("linkParams")) {
                     let list = await doFetch({
                       url: it?.options?.path,
-                      params: { ...params, isAll: 1 },
+                      params: { ...parames, isAll: 1 },
                     });
                     const res = list.data.dataList;
                     return it.valueType == "treeSelect"
@@ -173,11 +176,9 @@ const AutoTable = (props) => {
           };
         });
     });
-  }
-
+  }, [paramconfig]);
   //调用重新渲染表格
   useAsyncEffect(async () => {
-    changeColumns({});
     rerendered && actionRefs?.current?.reload();
   }, [path, columns, extraparams]);
 
@@ -244,8 +245,9 @@ const AutoTable = (props) => {
           let curchangekey = Object.keys(changedValues)[0];
           let newparams = {},
             resetkeys = [];
+
           columns.map((it, i) => {
-            const { linkParams } = it?.options??{};
+            const { linkParams } = it?.options ?? {};
             if (linkParams && Object.keys(linkParams).includes(curchangekey)) {
               for (let dataindex in linkParams) {
                 let linkkey = "";
@@ -266,7 +268,10 @@ const AutoTable = (props) => {
             formRefs?.current?.setFieldsValue({ [resetkey]: "" });
           }
           if (Object?.keys?.(newparams)?.length > 0) {
-            changeColumns(newparams);
+            setparamconfig((s) => ({
+              ...s,
+              [resetkey]: newparams,
+            }));
           }
         },
       }}

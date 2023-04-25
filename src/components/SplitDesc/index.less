@@ -1,0 +1,29 @@
+.title {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+  padding-left: 4px;
+  color: #000000;
+  font-weight: bolder;
+  font-size: 16px;
+  &::before {
+    position: absolute;
+    top: 4px;
+    left: -6px;
+    width: 3px;
+    height: 16px;
+    background-color: #13c2c2;
+    border-radius: 4px;
+    content: '';
+  }
+  &::after {
+    position: absolute;
+    top: 14px;
+    right: 0px;
+    width: calc(100% - 100px);
+    height: 1px;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    content: '';
+  }
+}

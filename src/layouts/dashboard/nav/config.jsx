@@ -94,12 +94,12 @@ const navConfig = [
       },
       {
         title: "学生管理",
-        path: "/login",
+        path: "/work/student",
         icon: icon("ic_student"),
       },
       {
         title: "班级管理",
-        path: "/login",
+        path: "/work/class",
         icon: icon("ic_class"),
       },
       {
@@ -109,12 +109,12 @@ const navConfig = [
       },
       {
         title: "模型管理",
-        path: "/login",
+        path: "/work/model",
         icon: icon("ic_3d"),
       },
       {
         title: "平台日志",
-        path: "/404",
+        path: "/work/logs",
         icon: icon("ic_blog"),
       },
     ]

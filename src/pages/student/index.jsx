@@ -12,7 +12,7 @@ import { Image, message, Switch, Tabs } from "antd";
 import { useMemo, useRef, useState } from "react";
 import "./index.less";
 
-function Teacher() {
+function Student() {
   const actionRef = useRef(),
     actionRefs = useRef();
   const [dialogprops, setdialogprops] = useState({
@@ -91,7 +91,7 @@ function Teacher() {
     return (
       <PremButton
         pop={{
-          title: "是否删除该教师?",
+          title: "是否删除该学生?",
           okText: "确认",
           cancelText: "取消",
           onConfirm: async () => {
@@ -202,19 +202,19 @@ function Teacher() {
           linkParams: { schoolId: "parentId" },
         },
       },
-      // {
-      //   title: "班级名称",
-      //   dataIndex: "className",
-      //   key: "classId",
-      //   formItemProps: { rules: [{ required: true, message: "此项为必填项" }] },
-      //   valueType: "select",
-      //   options: {
-      //     path: "/class/selection",
-      //     linkParams: {
-      //       departmentId: "",
-      //     },
-      //   },
-      // },
+      {
+        title: "班级名称",
+        dataIndex: "className",
+        key: "classId",
+        formItemProps: { rules: [{ required: true, message: "此项为必填项" }] },
+        valueType: "select",
+        options: {
+          path: "/class/selection",
+          linkParams: {
+            departmentId: "",
+          },
+        },
+      },
       {
         title: "创建时间",
         dataIndex: "createTime",
@@ -488,10 +488,7 @@ function Teacher() {
       key: "1",
       label: `正式用户`,
       children: (
-        <Box
-          boxShadow={"0 0 18px #f0f0f0"}
-          borderRadius={2}
-        >
+        <Box boxShadow={"0 0 18px #f0f0f0"} borderRadius={2}>
           <AutoTable
             actionRef={actionRef}
             scroll={{ x: 1366 }}
@@ -508,7 +505,7 @@ function Teacher() {
                 ],
               },
             ]}
-            extraparams={{ type: "2" }}
+            extraparams={{ type: "3" }}
             path="/user/page"
             rerendered={false}
           ></AutoTable>
@@ -517,12 +514,9 @@ function Teacher() {
     },
     {
       key: "2",
-      label: `教师认证申请`,
+      label: `学生认证申请`,
       children: (
-        <Box
-          boxShadow={"0 0 18px #f0f0f0"}
-          borderRadius={2}
-        >
+        <Box boxShadow={"0 0 18px #f0f0f0"} borderRadius={2}>
           <AutoTable
             actionRef={actionRefs}
             scroll={{ x: 1366 }}
@@ -535,7 +529,7 @@ function Teacher() {
                 render: (text, row, _, action) => [audit(text, row, _, action)],
               },
             ]}
-            path="/teacherApply/page"
+            path="/studentApply/page"
             rerendered={false}
           ></AutoTable>
         </Box>
@@ -586,7 +580,7 @@ function Teacher() {
                   id: dialogprops?.defaultFormValue?.id,
                 };
                 runAsync({
-                  url: "/teacherApply/review",
+                  url: "/studentApply/review",
                   params: postdata,
                 });
               }}
@@ -631,7 +625,7 @@ function Teacher() {
             fields={columns}
             defaultFormValue={dialogprops?.defaultFormValue}
             onFinish={(val, extra) => {
-              let postdata = { ...val, type: "2" };
+              let postdata = { ...val, type: "3" };
               switch (dialogprops?.title) {
                 case "编辑":
                   postdata = {
@@ -658,7 +652,7 @@ function Teacher() {
         sx={{ mb: 1 }}
         mt={0}
       >
-        <Typography variant="h5">教师管理</Typography>
+        <Typography variant="h5">学生管理</Typography>
         {active === "1" ? (
           <Stack spacing={2} direction="row">
             <ImportExcel></ImportExcel>
@@ -670,16 +664,17 @@ function Teacher() {
                   setdialogprops({
                     open: true,
                     defaultFormValue: {},
-                    title: "新增教师",
+                    title: "新增学生",
                   });
                 },
               }}
             >
-              新增教师
+              新增学生
             </PremButton>
           </Stack>
-        ):<Box height={36}/>
-        }
+        ) : (
+          <Box height={36} />
+        )}
       </Box>
 
       <Tabs
@@ -693,4 +688,4 @@ function Teacher() {
   );
 }
 
-export default Teacher;
+export default Student;

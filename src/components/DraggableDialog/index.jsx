@@ -1,3 +1,4 @@
+import { SendOutlined } from "@ant-design/icons";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -6,12 +7,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Paper from "@mui/material/Paper";
 import Slide from "@mui/material/Slide";
+import React from "react";
 import Draggable from "react-draggable";
-import {
-  SendOutlined
-} from '@ant-design/icons';
-import React, { useState, useEffect } from 'react';
-
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,7 +25,14 @@ function PaperComponent(props) {
   );
 }
 
-export default function DraggableDialog({ children, dialogprops, handleClose, loading, formdom, maxWidth }) {
+export default function DraggableDialog({
+  children,
+  dialogprops,
+  handleClose,
+  loading,
+  formdom,
+  maxWidth,
+}) {
   const formRef = React.useRef();
 
   return (
@@ -38,7 +42,7 @@ export default function DraggableDialog({ children, dialogprops, handleClose, lo
         PaperComponent={PaperComponent}
         aria-labelledby="draggable-dialog-title"
         TransitionComponent={Transition}
-        maxWidth={maxWidth??"xs"}
+        maxWidth={maxWidth ?? "xs"}
         fullWidth
         {...dialogprops}
         //keepMounted
@@ -49,33 +53,35 @@ export default function DraggableDialog({ children, dialogprops, handleClose, lo
         <DialogContent>
           {children &&
             React.cloneElement(children, { submitter: false, formRef })}
-            {formdom && React.cloneElement(formdom, { submitter: false, formRef })}
+          {formdom &&
+            React.cloneElement(formdom, { submitter: false, formRef })}
         </DialogContent>
-        <DialogActions>
-          <Button
-            type="reset"
-            key="rest"
-            onClick={() => {
-              formRef?.current?.resetFields();
-            }}
-          >
-            重置
-          </Button>
-          <LoadingButton
-            type="submit"
-            key="submit"
-            variant="contained"
-            loading={loading}
-            loadingPosition="start"
-            startIcon={<SendOutlined />}
-            onClick={() => {
-              console.log(formRef?.current?.submit())
-            
-            }}
-          >
-            提交
-          </LoadingButton>
-        </DialogActions>
+        {dialogprops?.footer === false ? null : (
+          <DialogActions>
+            <Button
+              type="reset"
+              key="rest"
+              onClick={() => {
+                formRef?.current?.resetFields();
+              }}
+            >
+              重置
+            </Button>
+            <LoadingButton
+              type="submit"
+              key="submit"
+              variant="contained"
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<SendOutlined />}
+              onClick={() => {
+                console.log(formRef?.current?.submit());
+              }}
+            >
+              提交
+            </LoadingButton>
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );
