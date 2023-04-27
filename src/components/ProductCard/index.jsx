@@ -71,7 +71,7 @@ export default function ShopProductCard({ product }) {
         >
           <Tooltip title="备课">
             <IconButton>
-              <IconFont type="icon-beike"></IconFont>
+              <IconFont type="icon-beike" style={{fontSize:20,color:"#000"}}></IconFont>
             </IconButton>
           </Tooltip>
 
