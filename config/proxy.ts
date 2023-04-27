@@ -11,10 +11,10 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'http://192.168.40.117:12345/',
+    "/vstp/": {
+      target: "http://192.168.40.117:8044/vstp",
       changeOrigin: true,
-      pathRewrite: { '^/api': '' },
+      pathRewrite: { "^/vstp": "" },
     },
   },
   /**
@@ -23,17 +23,17 @@ export default {
    */
   test: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
-    '/api/': {
-      target: 'https://proapi.azurewebsites.net',
+    "/api/": {
+      target: "https://proapi.azurewebsites.net",
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { "^": "" },
     },
   },
   pre: {
-    '/api/': {
-      target: 'your pre url',
+    "/api/": {
+      target: "your pre url",
       changeOrigin: true,
-      pathRewrite: { '^': '' },
+      pathRewrite: { "^": "" },
     },
   },
 };

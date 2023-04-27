@@ -103,8 +103,8 @@ const navConfig = [
         icon: icon("ic_class"),
       },
       {
-        title: "实训授权",
-        path: "/login",
+        title: "课程管理",
+        path: "/work/lessons",
         icon: icon("ic_lock"),
       },
       {

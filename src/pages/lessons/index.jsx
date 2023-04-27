@@ -1,16 +1,17 @@
-import AutoTable from "@/components/AutoTable";
 import DraggableDialog from "@/components/DraggableDialog";
 import ImportExcel from "@/components/ImportExcel";
 import InitForm from "@/components/InitForm";
 import PremButton from "@/components/PremButton";
+import ShopProductCard from "@/components/ProductCard";
 import { doFetch } from "@/utils/doFetch";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import PRODUCTS from "@/_mock/products";
+import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { useRequest } from "ahooks";
 import { message } from "antd";
 import { useMemo, useRef, useState } from "react";
 import "./index.less";
 
-function Class() {
+function Lessons() {
   const actionRef = useRef();
   const [dialogprops, setdialogprops] = useState({
     open: false,
@@ -58,12 +59,12 @@ function Class() {
     return (
       <PremButton
         pop={{
-          title: "是否删除该班级?",
+          title: "是否删除该课程?",
           okText: "确认",
           cancelText: "取消",
           onConfirm: async () => {
             await runAsync({
-              url: "/class/delete",
+              url: "/sysCourse/delete",
               params: { id: row.id },
             });
           },
@@ -78,32 +79,26 @@ function Class() {
     );
   };
 
-
   const columns = useMemo(
     () => [
       {
-        title: "班级名称",
-        dataIndex: "className",
-        key: "className",
-        colProps: {
-          span: 24,
+        title: "课程封面",
+        dataIndex: "pic",
+        key: "pic",
+        valueType: "uploadImage",
+        fieldProps: {
+          limit: 1,
         },
       },
       {
-        title: "学校名称",
-        dataIndex: "schoolName",
-        key: "schoolId",
-        valueType: "select",
-        options: { path: "/organization/school/selection", params: {} },
-      },
-      {
-        title: "院系名称",
-        dataIndex: "departmentName",
-        key: "departmentId",
-        valueType: "select",
-        options: {
-          path: "/organization/department/selection",
-          linkParams: { schoolId: "parentId" },
+        title: "课程名称",
+        dataIndex: "courseName",
+        key: "courseName",
+        formItemProps: {
+          rules: [{ required: true, message: "此项为必填项" }],
+        },
+        colProps: {
+          span: 24,
         },
       },
     ],
@@ -116,7 +111,7 @@ function Class() {
         handleClose={handleClose}
         loading={loading}
         dialogprops={dialogprops}
-        maxWidth={dialogprops?.maxWidth ?? "sm"}
+        maxWidth={dialogprops?.maxWidth ?? "xs"}
       >
         <InitForm
           fields={columns}
@@ -134,7 +129,7 @@ function Class() {
                 break;
             }
             runAsync({
-              url: "/class/saveOrUpdate",
+              url: "/sysCourse/saveOrUpdate",
               params: postdata,
             });
           }}
@@ -148,7 +143,7 @@ function Class() {
         sx={{ mb: 2.5 }}
         mt={0}
       >
-        <Typography variant="h5">班级管理</Typography>
+        <Typography variant="h5">课程管理</Typography>
         <Stack spacing={2} direction="row">
           <ImportExcel></ImportExcel>
           <PremButton
@@ -159,38 +154,27 @@ function Class() {
                 setdialogprops({
                   open: true,
                   defaultFormValue: {},
-                  title: "新增班级",
+                  title: "新增课程",
                 });
               },
             }}
           >
-            新增班级
+            新增课程
           </PremButton>
         </Stack>
       </Box>
 
-      <Box boxShadow={"0 0 18px #f0f0f0"} borderRadius={2}>
-        <AutoTable
-          actionRef={actionRef}
-          scroll={{ x: 1366 }}
-          columns={[
-            ...columns,
-            {
-              title: "操作",
-              valueType: "option",
-              width: 200,
-              render: (text, row, _, action) => [
-                edit(text, row, _, action),
-                remove(text, row, _, action),
-              ],
-            },
-          ]}
-          path="/class/page"
-          rerendered={false}
-        ></AutoTable>
+      <Box mt={2.5}>
+        <Grid container spacing={3}>
+          {PRODUCTS.map((product) => (
+            <Grid key={product.id} item xs={12} sm={6} md={3}>
+              <ShopProductCard product={product} />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </Container>
   );
 }
 
-export default Class;
+export default Lessons;

@@ -83,10 +83,16 @@ export default [
             name: "模型管理",
             path: "/work/model",
             component: "./model",
-          }, {
+          },
+          {
             name: "平台日志",
-            path: "/work/logs" ,
+            path: "/work/logs",
             component: "./logs",
+          },
+          {
+            name: "课程管理",
+            path: "/work/lessons",
+            component: "./lessons",
           },
         ],
       },
