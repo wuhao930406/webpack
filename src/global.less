@@ -525,11 +525,9 @@ h4 {
 .ant-popover-arrow {
   display: none !important;
 }
-.ant-upload{
+.ant-upload {
   overflow: hidden !important;
 }
-
-
 
 .MuiDrawer-paper {
   z-index: 992 !important;
@@ -540,18 +538,73 @@ h4 {
 .MuiDialog-root {
   z-index: 999 !important;
 }
-.ant-tabs-nav{
+.ant-tabs-nav {
   margin-bottom: 0 !important;
 }
-.ant-tabs-nav::before{
+.ant-tabs-nav::before {
   border: none !important;
 }
-.ant-tabs-ink-bar-animated{
+.ant-tabs-ink-bar-animated {
   display: none !important;
 }
-.ant-tabs-tab-btn{
+.ant-tabs-tab-btn {
   font-weight: bolder !important;
 }
-.ant-image-mask{
+.ant-image-mask {
   border-radius: 50%;
+}
+
+.hovered {
+  .actionhover {
+    position: absolute;
+    top: 6%;
+    display: flex;
+    align-items: flex-end;
+    width: 92%;
+    height: 92%;
+
+    * {
+      transition: all 0.2s;
+    }
+    .edit {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      transform: translateY(-80px);
+    }
+
+    .masker {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      opacity: 0;
+    }
+    .stackani {
+      transform: translateY(80px);
+      margin-bottom: 8px;
+    }
+  }
+
+  &:hover {
+    .actionhover {
+      position: absolute;
+      top: 6%;
+      display: flex;
+      align-items: flex-end;
+      width: 92%;
+      height: 92%;
+
+      .edit {
+        transform: translateY(0px);
+      }
+
+      .masker {
+        opacity: 1;
+      }
+      .stackani {
+        transform: translateY(0px);
+      }
+    }
+  }
 }

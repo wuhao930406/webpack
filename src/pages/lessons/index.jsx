@@ -3,11 +3,12 @@ import ImportExcel from "@/components/ImportExcel";
 import InitForm from "@/components/InitForm";
 import PremButton from "@/components/PremButton";
 import ShopProductCard from "@/components/ProductCard";
+import ShopProductLoadingCard from "@/components/ProductCard/loading";
 import { doFetch } from "@/utils/doFetch";
 import PRODUCTS from "@/_mock/products";
 import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { useRequest } from "ahooks";
-import { message } from "antd";
+import { Empty, message } from "antd";
 import { useMemo, useRef, useState } from "react";
 import "./index.less";
 
@@ -15,6 +16,11 @@ function Lessons() {
   const actionRef = useRef();
   const [dialogprops, setdialogprops] = useState({
     open: false,
+  });
+  const [params, setparams] = useState({
+    courseName: "",
+    status: null,
+    type: null,
   });
 
   const handleClose = () => {
@@ -30,53 +36,43 @@ function Lessons() {
       if (res?.code == "0000") {
         handleClose();
         message.success("操作成功");
-        actionRef?.current?.reload();
+        datalist?.refresh();
       }
     },
   });
 
-  const edit = (text, row, _, action) => {
-    return (
-      <PremButton
-        btn={{
-          size: "small",
-          variant: "text",
-          onClick: () => {
-            setdialogprops({
-              open: true,
-              defaultFormValue: { ...row },
-              title: "编辑",
-            });
-          },
-        }}
-      >
-        编辑
-      </PremButton>
-    );
+  const datalist = useRequest(
+    async () => {
+      let res = await doFetch({ url: "/sysCourse/list", params });
+      return res?.data?.dataList;
+    },
+    {
+      debounceWait: 400,
+    }
+  );
+
+  const edit = (row) => {
+    setdialogprops({
+      open: true,
+      defaultFormValue: { ...row },
+      title: "编辑",
+    });
   };
 
-  const remove = (text, row, _, action) => {
-    return (
-      <PremButton
-        pop={{
-          title: "是否删除该课程?",
-          okText: "确认",
-          cancelText: "取消",
-          onConfirm: async () => {
-            await runAsync({
-              url: "/sysCourse/delete",
-              params: { id: row.id },
-            });
-          },
-        }}
-        btn={{
-          size: "small",
-          color: "error",
-        }}
-      >
-        删除
-      </PremButton>
-    );
+  const remove = (row) => {
+    runAsync({
+      url: "/sysCourse/delete",
+      params: { id: row.id },
+    });
+  };
+
+  const publish = (row, params) => {
+    const type = row?.type === 1 ? 2 : row?.type === 2 ? 1 : null;
+    const extra = params ?? { type };
+    runAsync({
+      url: "/sysCourse/pubOrNotPub",
+      params: { id: row.id, ...extra },
+    });
   };
 
   const columns = useMemo(
@@ -166,11 +162,31 @@ function Lessons() {
 
       <Box mt={2.5}>
         <Grid container spacing={3}>
-          {PRODUCTS.map((product) => (
-            <Grid key={product.id} item xs={12} sm={6} md={3}>
-              <ShopProductCard product={product} />
+          {datalist?.loading && !datalist?.data ? (
+            PRODUCTS?.map((product, i) => {
+              return (
+                <Grid key={product.id} item xs={12} sm={4} md={3} lg={2.4}>
+                  <ShopProductLoadingCard product={product} />
+                </Grid>
+              );
+            })
+          ) : datalist?.data?.length === 0 ? (
+            <Grid xs={12} mt={12}>
+              <Empty></Empty>
             </Grid>
-          ))}
+          ) : (
+            datalist?.data?.map?.((product) => (
+              <Grid key={product.id} item xs={12} sm={4} md={3} lg={2.4}>
+                <ShopProductCard
+                  product={product}
+                  loading={datalist?.loading}
+                  edit={edit}
+                  remove={remove}
+                  publish={publish}
+                />
+              </Grid>
+            ))
+          )}
         </Grid>
       </Box>
     </Container>
