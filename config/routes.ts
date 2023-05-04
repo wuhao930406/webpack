@@ -94,6 +94,11 @@ export default [
             path: "/work/lessons",
             component: "./lessons",
           },
+          {
+            name: "备课",
+            path: "/work/dolessons/:id",
+            component: "./dolessons",
+          },
         ],
       },
       {

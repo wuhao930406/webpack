@@ -18,6 +18,7 @@ import difftime from "@/utils/difftime";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { history } from "@umijs/max";
 import dayjs from "dayjs";
 import { useState } from "react";
 
@@ -130,7 +131,11 @@ export default function ShopProductCard({ product, remove, edit, publish }) {
             className="stackani"
           >
             <Tooltip title="备课">
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  history.push("/work/dolessons/" + product.id);
+                }}
+              >
                 <IconFont
                   type="icon-beike"
                   style={{ fontSize: 20, color: "#ffffff" }}
